@@ -1,123 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VAware</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <title>Hello, world!</title>
   </head>
   <body>
-    <button id="read">Connect</button>
-    <button id="send1">Red</button>
-    <button id="send2">White</button>
-    <button id="send3">Green</button>
-    <button id="send4">Blue</button>
-    <button id="send5">Yellow</button>
-    <button id="send6">Black</button>
+    <div class="container">
+      <!-- <button type="button" class="btn btn-outline-light">Light</button> -->
+      <button id="read" type="button" class="btn btn-dark btn-lg btn-block">
+        Connect
+      </button>
+      <button
+        id="send1"
+        type="button"
+        class="btn btn-outline-danger btn-lg btn-block"
+      >
+        Red
+      </button>
+      <button
+        id="send2"
+        type="button"
+        class="btn btn-outline-secondary btn-lg btn-block"
+      >
+        White
+      </button>
+      <button
+        id="send3"
+        type="button"
+        class="btn btn-outline-success btn-lg btn-block"
+      >
+        Green
+      </button>
+      <button
+        id="send4"
+        type="button"
+        class="btn btn-outline-primary btn-lg btn-block"
+      >
+        Blue
+      </button>
+      <button
+        id="send5"
+        type="button"
+        class="btn btn-outline-warning btn-lg btn-block"
+      >
+        Yellow
+      </button>
+      <button
+        id="send6"
+        type="button"
+        class="btn btn-outline-dark btn-lg btn-block"
+      >
+        Black
+      </button>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="index.js" charset="utf-8"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
-
-<script>
-  var myDescriptor;
-  let serviceUuid = "e472cea9-3ae8-4d96-951e-7086fe17d416";
-  let characteristicUuid = "7abd909a-a9e5-4409-96a9-7aa4fa33426f";
-
-  document.querySelector("#read").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onReadButtonClick();
-    }
-  });
-
-  document.querySelector("#send1").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("1");
-    }
-  });
-  document.querySelector("#send2").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("2");
-    }
-  });
-  document.querySelector("#send3").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("3");
-    }
-  });
-  document.querySelector("#send4").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("4");
-    }
-  });
-  document.querySelector("#send5").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("5");
-    }
-  });
-  document.querySelector("#send6").addEventListener("click", function () {
-    if (isWebBluetoothEnabled()) {
-      onWriteButtonClick("6");
-    }
-  });
-
-  function isWebBluetoothEnabled() {
-    if (!navigator.bluetooth) {
-      console.log("Web Bluetooth API is not available in this browser!");
-      return false;
-    }
-
-    return true;
-  }
-
-  function onReadButtonClick() {
-    console.log("Requesting any Bluetooth Device...");
-    navigator.bluetooth
-      .requestDevice({
-        filters: [{ name: "VAware" }],
-        //acceptAllDevices: true,
-        optionalServices: [serviceUuid],
-      })
-      .then((device) => {
-        console.log("Connecting to GATT Server...");
-        return device.gatt.connect();
-      })
-      .then((server) => {
-        console.log("Getting Service...");
-        return server.getPrimaryService(serviceUuid);
-      })
-      .then((service) => {
-        console.log("Getting Characteristic...");
-        return service.getCharacteristic(characteristicUuid);
-      })
-      .then((descriptor) => {
-        myDescriptor = descriptor;
-        console.log("Reading Descriptor...");
-        return descriptor.readValue();
-      })
-      .then((value) => {
-        let decoder = new TextDecoder("utf-8");
-        console.log(
-          "> Characteristic User Description: " + decoder.decode(value)
-        );
-      })
-      .catch((error) => {
-        console.log("Argh! " + error);
-      });
-  }
-
-  function onWriteButtonClick(val) {
-    if (!myDescriptor) {
-      return;
-    }
-    let encoder = new TextEncoder("utf-8");
-    let value = val;
-    console.log("Setting Characteristic User Description...");
-    myDescriptor
-      .writeValue(encoder.encode(value))
-      .then((_) => {
-        console.log("> Characteristic User Description changed to: " + value);
-      })
-      .catch((error) => {
-        console.log("Argh! " + error);
-      });
-  }
-</script>
